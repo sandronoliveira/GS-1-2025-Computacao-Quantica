@@ -5,37 +5,37 @@ import matplotlib.pyplot as plt
 
 def run_quantum_rescue_simulation():
     """
-    Simulates a quantum decision-making process for disaster response prioritization.
+    Simula um processo de tomada de decisão quântica para a priorização da resposta a desastres.
     """
 
-    # --- 1. Define Quantum and Classical Registers ---
-    # Sensor qubits for Zone A (sA[0]=Severity, sA[1]=Casualties)
+    # --- 1. Define Registradores Quânticos e Clássicos ---
+    # Qubits de sensor para a Zona A (sA[0]=Severidade, sA[1]=Vítimas)
     qr_sensors_A = QuantumRegister(2, 'sA')
-    # Sensor qubits for Zone B (sB[0]=Severity, sB[1]=Casualties)
+    # Qubits de sensor para a Zona B (sB[0]=Severidade, sB[1]=Vítimas)
     qr_sensors_B = QuantumRegister(2, 'sB')
-    # Ancilla qubit for Zone A priority
+    # Qubit ancilla para a prioridade da Zona A
     qr_priority_A = QuantumRegister(1, 'pA')
-    # Ancilla qubit for Zone B priority
+    # Qubit ancilla para a prioridade da Zona B
     qr_priority_B = QuantumRegister(1, 'pB')
-    # Qubit for the final decision (1 for Zone A, 0 for Zone B)
+    # Qubit para a decisão final (1 para Zona A, 0 para Zona B)
     qr_decision = QuantumRegister(1, 'decision')
 
-    # Classical register to store the measurement of the decision qubit
+    # Registrador clássico para armazenar a medição do qubit de decisão
     cr_result = ClassicalRegister(1, 'c_decision')
 
-    # --- 2. Create Quantum Circuit ---
+    # --- 2. Cria o Circuito Quântico ---
     qc = QuantumCircuit(qr_sensors_A, qr_sensors_B, qr_priority_A, qr_priority_B, qr_decision, cr_result)
 
-    # --- 3. Superposition for Sensor Inputs ---
-    # Place all sensor qubits in superposition to represent uncertainty or explore all scenarios
-    qc.h(qr_sensors_A[0])  # Severity Zone A
-    qc.h(qr_sensors_A[1])  # Casualties Zone A
-    qc.h(qr_sensors_B[0])  # Severity Zone B
-    qc.h(qr_sensors_B[1])  # Casualties Zone B
+    # --- 3. Superposição para as Entradas dos Sensores ---
+    # Coloca todos os qubits de sensor em superposição para representar incerteza ou explorar todos os cenários
+    qc.h(qr_sensors_A[0])  # Severidade Zona A
+    qc.h(qr_sensors_A[1])  # Vítimas Zona A
+    qc.h(qr_sensors_B[0])  # Severidade Zona B
+    qc.h(qr_sensors_B[1])  # Vítimas Zona B
     qc.barrier() # Separador visual e de compilação
 
-    # --- 4. Entanglement for Interdependent Sensors ---
-    # Model interdependency: if severity is high (1), it influences casualty assessment.
+    # --- 4. Emaranhamento para Sensores Interdependentes ---
+    # Modela a interdependência: se a severidade é alta (1), isso influencia a avaliação de vítimas.
     # Ex: Se sA[0] (Severidade A) é |1>, sA[1] (Vítimas A) é invertido.
     # Isso visa criar uma correlação, por exemplo, (Alta Severidade, Muitas Vítimas) ou
     # (Alta Severidade, Poucas Vítimas) se tornam mais prováveis do que (Baixa Severidade, Muitas Vítimas).
@@ -44,21 +44,21 @@ def run_quantum_rescue_simulation():
     qc.cx(qr_sensors_B[0], qr_sensors_B[1])
     qc.barrier()
 
-    # --- 5. Calculate Priority for Zone A (pA) ---
+    # --- 5. Calcula a Prioridade para a Zona A (pA) ---
     # pA = 1 se (Severidade A = 1 AND Vítimas A = 1)
     # Usa porta Toffoli (CCX): pA[0] inverte se sA[0]=1 e sA[1]=1.
     # qr_priority_A[0] é inicializado em |0>.
     qc.ccx(qr_sensors_A[0], qr_sensors_A[1], qr_priority_A[0])
     qc.barrier()
 
-    # --- 6. Calculate Priority for Zone B (pB) ---
+    # --- 6. Calcula a Prioridade para a Zona B (pB) ---
     # pB = 1 se (Severidade B = 1 AND Vítimas B = 1)
     # Usa porta Toffoli (CCX): pB[0] inverte se sB[0]=1 e sB[1]=1.
     # qr_priority_B[0] é inicializado em |0>.
     qc.ccx(qr_sensors_B[0], qr_sensors_B[1], qr_priority_B[0])
     qc.barrier()
 
-    # --- 7. Decision Logic for qr_decision[0] (1 para Zona A, 0 para Zona B) ---
+    # --- 7. Lógica de Decisão para qr_decision[0] (1 para Zona A, 0 para Zona B) ---
     # Lógica: Priorizar A se pA=1. Senão, priorizar B se pB=1. Senão (nenhuma é prioritária), priorizar A.
     # Isso se traduz em: decision = pA OR (!pA AND !pB)
     # O qubit qr_decision[0] é inicializado em |0>.
@@ -66,20 +66,20 @@ def run_quantum_rescue_simulation():
     # Parte 1: Se pA = 1, então decision = 1.
     qc.cx(qr_priority_A[0], qr_decision[0])
 
-    # Parte 2: Se pA = 0 E pB = 0, então decision = 1 (para implementar a default A)
+    # Parte 2: Se pA = 0 E pB = 0, então decision = 1 (para implementar o padrão para A)
     # Usamos CCX com controles invertidos para pA e pB sobre qr_decision[0].
     # Se qr_decision[0] é 0 (porque pA=0), e pA original=0 e pB original=0, então decision se torna 1.
-    qc.x(qr_priority_A[0]) # Inverte pA: agora é 1 se pA original era 0
-    qc.x(qr_priority_B[0]) # Inverte pB: agora é 1 se pB original era 0
+    qc.x(qr_priority_A[0]) # Inverte pA: agora é 1 se o pA original era 0
+    qc.x(qr_priority_B[0]) # Inverte pB: agora é 1 se o pB original era 0
     qc.ccx(qr_priority_A[0], qr_priority_B[0], qr_decision[0])
     qc.x(qr_priority_A[0]) # Desfaz a inversão de pA
     qc.x(qr_priority_B[0]) # Desfaz a inversão de pB
     qc.barrier()
 
-    # --- 8. Measure the Decision Qubit ---
+    # --- 8. Mede o Qubit de Decisão ---
     qc.measure(qr_decision[0], cr_result[0])
 
-    # --- 9. Simulate the Circuit ---
+    # --- 9. Simula o Circuito ---
     print("Circuito Quântico para Tomada de Decisão:")
     try:
         circuit_diagram = qc.draw(output='mpl')
@@ -119,4 +119,4 @@ if __name__ == '__main__':
     qc_final, result_counts = run_quantum_rescue_simulation()
     print("\nExecução da simulação concluída.")
     if result_counts:
-        print(f"Contagens finais: {result_counts}") 
+        print(f"Contagens finais: {result_counts}")
