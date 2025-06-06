@@ -229,7 +229,7 @@ c_decision: 1/══════════════════════
 
 ```text
 Resultados da Simulação (Contagens):
-{'1': 6150, '0': 2042} # Estes números são exemplos e variarão a cada execução completa do script.
+{'0': 199, '1': 825}
 
 Interpretação dos Resultados:
 '0' significa priorizar Zona B.
