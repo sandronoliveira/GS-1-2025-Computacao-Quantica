@@ -229,7 +229,7 @@ c_decision: 1/══════════════════════
 
 ```text
 Resultados da Simulação (Contagens):
-{'0': 199, '1': 825}
+{'1': 6685, '0': 1507}
 
 Interpretação dos Resultados:
 '0' significa priorizar Zona B.
