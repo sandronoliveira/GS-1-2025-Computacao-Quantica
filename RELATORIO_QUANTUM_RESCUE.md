@@ -192,10 +192,6 @@ if __name__ == '__main__':
 
 ### 5.1. Diagrama do Circuito (Qiskit `qc.draw()`)
 
-*(Inserir aqui a imagem `quantum_circuit_diagram.png` gerada pelo script ou um print do Qiskit Composer)*
-
-**Representação em Texto (fallback, gerada pelo script):**
-
 ```text
 (O output do qc.draw(output='text') será exibido aqui pelo script se a geração de imagem falhar.
 Copie e cole o output do terminal aqui se necessário.)
@@ -223,7 +219,8 @@ c_decision: 1/══════════════════════
 
 ### 5.2. Output da Simulação (Resultados/Contagens)
 
-*(Inserir aqui a imagem `results_histogram.png` gerada pelo script e o output de texto das contagens do terminal)*
+![results_histogram](https://github.com/user-attachments/assets/13210d00-ee02-4a75-ad6a-122a3cd4b0da)
+
 
 **Exemplo de Contagens (obtido do output do script):**
 
@@ -264,4 +261,3 @@ A simulação QuantumRescue demonstrou com sucesso como os princípios da comput
 Embora esta seja uma prova de conceito simplificada, ela estabelece uma base para futuras explorações no uso de IA quântica para otimizar respostas a emergências. O projeto cumpre o objetivo de conectar conceitos quânticos com a lógica de IA em tempo real, aplicável em contextos de emergência, e serve como um ponto de partida para investigações mais profundas e complexas.
 
 ---
-*(Fim do Relatório)* 
